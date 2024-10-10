@@ -1,0 +1,30 @@
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: true
+    reload.period: 10s
+
+#processors:
+#  - add_host_metadata: ~
+#  - add_cloud_metadata: ~
+#  - add_docker_metadata: ~
+#  - add_kubernetes_metadata: ~
+
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /usr/share/filebeat/nginx/logs/test.access.log
+  fields:
+    log_source: nginx
+    log_type: www
+  fields_under_root: true
+  tags: ["nginx"]
+  json:
+    keys_under_root: true
+    overwrite_keys: true
+    add_error_key: true
+
+output.elasticsearch:
+  hosts: ["172.29.89.96:9200"]  # ES地址
+  enabled: true
